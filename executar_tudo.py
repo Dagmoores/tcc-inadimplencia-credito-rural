@@ -11,6 +11,6 @@ import os
 RAIZ = os.path.dirname(os.path.abspath(__file__))
 for etapa in ["01_coleta_dados.py", "02_estacionariedade_adf.py", "03_causalidade_granger.py",
               "04_modelos_teste_2025.py", "05_validacao_origem_movel_dm.py",
-              "06_diagnostico_residuos.py", "07_figuras.py"]:
+              "06_diagnostico_residuos.py", "07_figuras.py", "08_robustez_defasagens.py"]:
     print("\n=== Executando", etapa)
     runpy.run_path(os.path.join(RAIZ, etapa), run_name="__main__")

@@ -12,11 +12,12 @@ O código coleta séries mensais do Banco Central do Brasil (jan/2016 a dez/2025
 |---|---|---|
 | Coleta, integração mensal e estatística descritiva | [`01_coleta_dados.py`](01_coleta_dados.py) | Tabela 1; Figuras 1 e 2 |
 | Teste aumentado de Dickey-Fuller | [`02_estacionariedade_adf.py`](02_estacionariedade_adf.py) | Tabela 2; Figura 3 |
-| Causalidade de Granger | [`03_causalidade_granger.py`](03_causalidade_granger.py) | Tabela 3 |
+| Causalidade de Granger (1 a 12 defasagens) | [`03_causalidade_granger.py`](03_causalidade_granger.py) | Tabela 3 |
 | Modelos e teste fora da amostra (2025) | [`04_modelos_teste_2025.py`](04_modelos_teste_2025.py) | Tabela 4; Figura 4 |
 | Validação com origem móvel e teste de Diebold-Mariano | [`05_validacao_origem_movel_dm.py`](05_validacao_origem_movel_dm.py) | Tabelas 5 e 6; Figura 5 |
-| Diagnóstico dos resíduos (Ljung-Box e Jarque-Bera) | [`06_diagnostico_residuos.py`](06_diagnostico_residuos.py) | Tabela 7; Figura 6 |
+| Diagnóstico dos resíduos (Ljung-Box e Jarque-Bera) | [`06_diagnostico_residuos.py`](06_diagnostico_residuos.py) | Tabela 8; Figura 6 |
 | Geração das figuras | [`07_figuras.py`](07_figuras.py) | Figuras 1 a 6 |
+| Robustez: variáveis exógenas defasadas em 3, 6 e 12 meses | [`08_robustez_defasagens.py`](08_robustez_defasagens.py) | Tabela 7 |
 | Funções e dados compartilhados | [`comum.py`](comum.py) | – |
 
 Os resultados numéricos ficam em [`saidas/resultados.json`](saidas/resultados.json) e as figuras em [`saidas/`](saidas/).
@@ -30,7 +31,7 @@ pip install -r requirements.txt
 python executar_tudo.py        # ou cada script individualmente, na ordem
 ```
 
-A execução completa leva cerca de 2 minutos. O arquivo [`dados/dados_bcb_2016_2025.csv`](dados/dados_bcb_2016_2025.csv) contém os dados exatamente como coletados em 23/11/2026, o que garante a reprodução dos números do TCC mesmo que o BCB revise as séries. Para coletar os dados novamente pela API, apague o CSV antes de executar.
+A execução completa leva cerca de 5 minutos. O arquivo [`dados/dados_bcb_2016_2025.csv`](dados/dados_bcb_2016_2025.csv) contém os dados exatamente como coletados em 23/11/2026, o que garante a reprodução dos números do TCC mesmo que o BCB revise as séries. Para coletar os dados novamente pela API, apague o CSV antes de executar.
 
 Testado com Python 3.13, pandas 3.0, numpy 2.5, statsmodels 0.15, scipy 1.18 e matplotlib 3.11.
 
@@ -56,7 +57,7 @@ Ingênuo (referência), ARIMA(1,2,1), SARIMA(1,2,1)(1,1,1)₁₂, SARIMAX (Selic
 
 - **Validação com origem móvel (2023–2025):** o SARIMA teve o menor erro absoluto médio em todos os horizontes (0,199, 0,413 e 0,867 p.p. para 1, 3 e 6 meses).
 - **Teste em 2025:** o VAR teve o menor erro (MAPE de 14,11%), mas não manteve o desempenho na validação com origem móvel.
-- As variáveis macroeconômicas e do agronegócio não melhoraram as previsões, e os testes de causalidade de Granger não foram significativos.
+- As variáveis macroeconômicas e do agronegócio não melhoraram as previsões, nem mesmo com defasagens de 3, 6 e 12 meses, e os testes de causalidade de Granger não foram significativos.
 
 ## Como citar
 
