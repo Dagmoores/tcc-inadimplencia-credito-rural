@@ -5,8 +5,11 @@ Parte do código do TCC "Modelos de séries temporais para previsão de inadimpl
 no crédito rural brasileiro" (MBA USP/ESALQ) — Daniel Augusto Moore da Silva.
 Execute a partir da pasta raiz do repositório: python 07_figuras.py
 """
+import logging
+
 import matplotlib
 matplotlib.use("Agg")
+logging.getLogger("matplotlib.font_manager").setLevel(logging.ERROR)  # silencia aviso quando a Arial não está instalada
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import numpy as np
@@ -94,7 +97,7 @@ fig.tight_layout(w_pad=1.5)
 salvar(fig, "fig3_diferencas.png")
 
 # Figura 4 - previsões de 2025 (seis painéis)
-fig, axs = plt.subplots(3, 2, figsize=(LARGURA, 15.5 * CM), sharex=True, sharey=True)
+fig, axs = plt.subplots(3, 2, figsize=(LARGURA, 12.3 * CM), sharex=True, sharey=True)
 hist = y.loc["2023-01-01":]
 for a, m in zip(axs.flat, ["ARIMA", "SARIMA", "SARIMAX", "SARIMAX-Agro", "VAR", "VAR-Agro"]):
     a.axvline(idx_2025[0] - pd.Timedelta(days=15), color=CINZA_CLARO, lw=0.8, ls="--")
