@@ -14,10 +14,11 @@ from statsmodels.tsa.stattools import grangercausalitytests
 from comum import df, salvar_resultados, y
 
 R = {}
-# Séries transformadas para estacionariedade: alvo em 2a diferença, demais em 1a diferença
+# Séries na ordem de integração indicada pelo ADF (Tabela 2): alvo em 2a diferença;
+# Selic, câmbio e IC-Br em 1a diferença; IPCA (variação mensal, já estacionária) em nível
 gr = pd.DataFrame({"alvo": y.diff().diff()})
 for c in ["selic", "ipca", "log_cambio", "log_icbr_agro"]:
-    gr[c] = df[c].diff()
+    gr[c] = df[c] if c == "ipca" else df[c].diff()
 gr = gr.dropna()
 R["granger"] = {}
 for c in ["selic", "ipca", "log_cambio", "log_icbr_agro"]:

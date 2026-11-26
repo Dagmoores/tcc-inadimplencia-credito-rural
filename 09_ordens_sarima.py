@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """Etapa 9 — Sensibilidade à ordem do SARIMA: compara a especificação adotada, SARIMA(1,2,1)(1,1,1)12,
-com alternativas de menor ordem de diferenciação ou menos parâmetros (AIC, MAPE em 2025 e MAE na
-validação com origem móvel), justificando a escolha descrita na seção Metodologia.
+com alternativas de menor ordem de diferenciação ou menos parâmetros pelo MAE na validação com
+origem móvel, justificando a escolha descrita na seção Metodologia. O AIC e o MAPE de 2025 são
+registrados apenas como informação complementar: o AIC não é comparável entre modelos com ordens
+de diferenciação distintas.
 
 Parte do código do TCC "Modelos de séries temporais para previsão de inadimplência
 no crédito rural brasileiro" (MBA USP/ESALQ) — Daniel Augusto Moore da Silva.
