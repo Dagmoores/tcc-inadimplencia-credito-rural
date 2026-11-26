@@ -35,10 +35,12 @@ plt.rcParams.update({
     "font.family": ["Arial", "Liberation Sans", "DejaVu Sans"], "font.size": 8.5,
     "axes.titlesize": 9, "axes.titleweight": "normal", "axes.labelsize": 8.5,
     "xtick.labelsize": 8, "ytick.labelsize": 8, "legend.fontsize": 8,
-    "axes.edgecolor": "#8a8a8a", "axes.linewidth": 0.6, "axes.labelcolor": TINTA,
-    "xtick.color": "#4a4a4a", "ytick.color": "#4a4a4a", "xtick.major.width": 0.6, "ytick.major.width": 0.6,
+    # Padrão do Manual do MBA USP/Esalq: sem linhas de grade, sem borda e sem título no gráfico;
+    # eixos principais em linha sólida preta de 1,5 pt; textos em preto.
+    "axes.edgecolor": "black", "axes.linewidth": 1.5, "axes.labelcolor": "black",
+    "xtick.color": "black", "ytick.color": "black", "xtick.major.width": 1.0, "ytick.major.width": 1.0,
     "axes.spines.top": False, "axes.spines.right": False,
-    "axes.grid": True, "axes.grid.axis": "y", "grid.color": "#e6e6e6", "grid.linewidth": 0.6,
+    "axes.grid": False,
     "lines.linewidth": 1.4, "savefig.dpi": 300, "figure.dpi": 100,
     "axes.formatter.use_locale": False,
 })
@@ -52,6 +54,17 @@ def virgula(ax, eixo="y", casas=None):
         s = f"{v:.{casas}f}" if casas is not None else f"{v:g}"
         return s.replace(".", ",").replace("-", "\u2212")
     (ax.yaxis if eixo == "y" else ax.xaxis).set_major_formatter(FuncFormatter(fmt))
+
+
+def painel(ax, letra):
+    """Identifica o painel com letra maiúscula, sem pontuação, no canto superior esquerdo."""
+    ax.text(-0.02, 1.04, letra, transform=ax.transAxes, ha="right", va="bottom",
+            fontsize=9.5, fontweight="bold", color="black")
+
+
+def rotulo(ax, texto):
+    """Nome da série dentro da área do gráfico (não é título do gráfico)."""
+    ax.text(0.02, 0.97, texto, transform=ax.transAxes, ha="left", va="top", fontsize=8, color="black")
 
 
 def formata_datas(ax, meses=12, anos=1):
@@ -79,31 +92,30 @@ salvar(fig, "fig1_series.png")
 
 # Figura 2 - variáveis explicativas (quatro painéis)
 fig, axs = plt.subplots(2, 2, figsize=(LARGURA, 8.6 * CM), sharex=True)
-for a, (c, t) in zip(axs.flat, [("selic", "(a) Meta da taxa Selic (% a.a.)"), ("ipca", "(b) IPCA (variação mensal, %)"),
-                                 ("cambio", "(c) Taxa de câmbio (R\\$/US\\$)"), ("icbr_agro", "(d) IC-Br Agropecuária (índice)")]):
-    a.plot(df.index, df[c], color=AZUL, lw=1.2); a.set_title(t, loc="left", color=TINTA)
+for a, l, (c, t) in zip(axs.flat, "ABCD", [("selic", "Selic (% a.a.)"), ("ipca", "IPCA (% ao mês)"),
+                                           ("cambio", "Câmbio (R\\$/US\\$)"), ("icbr_agro", "IC-Br Agropecuária")]):
+    a.plot(df.index, df[c], color=AZUL, lw=1.2); a.set_ylabel(t); painel(a, l)
     formata_datas(a, anos=2); virgula(a)
 fig.tight_layout(h_pad=1.2, w_pad=1.5)
 salvar(fig, "fig2_explicativas.png")
 
 # Figura 3 - diferenças da série alvo
 fig, axs = plt.subplots(1, 2, figsize=(LARGURA, 5.4 * CM), sharey=False)
-for a, (s, t) in zip(axs, [(y.diff(), "(a) Primeira diferença"), (y.diff().diff(), "(b) Segunda diferença")]):
+for a, l, (s, t) in zip(axs, "AB", [(y.diff(), "1ª diferença (pontos percentuais)"), (y.diff().diff(), "2ª diferença (pontos percentuais)")]):
     a.axhline(0, color=CINZA_CLARO, lw=0.8)
-    a.plot(s, color=AZUL, lw=1.0); a.set_title(t, loc="left", color=TINTA)
+    a.plot(s, color=AZUL, lw=1.0); a.set_ylabel(t); painel(a, l)
     formata_datas(a, anos=2); virgula(a)
-axs[0].set_ylabel("Pontos percentuais")
 fig.tight_layout(w_pad=1.5)
 salvar(fig, "fig3_diferencas.png")
 
 # Figura 4 - previsões de 2025 (seis painéis)
 fig, axs = plt.subplots(3, 2, figsize=(LARGURA, 12.3 * CM), sharex=True, sharey=True)
 hist = y.loc["2023-01-01":]
-for a, m in zip(axs.flat, ["ARIMA", "SARIMA", "SARIMAX", "SARIMAX-Agro", "VAR", "VAR-Agro"]):
+for a, l, m in zip(axs.flat, "ABCDEF", ["ARIMA", "SARIMA", "SARIMAX", "SARIMAX-Agro", "VAR", "VAR-Agro"]):
     a.axvline(idx_2025[0] - pd.Timedelta(days=15), color=CINZA_CLARO, lw=0.8, ls="--")
     a.plot(hist.index, hist, color=CINZA, lw=1.4, label="Observado")
     a.plot(prev_2025[m].index, prev_2025[m], color=AZUL, lw=1.4, marker="o", ms=3, label="Previsto")
-    a.set_title(m, loc="left", color=TINTA)
+    painel(a, l); rotulo(a, m)
     formata_datas(a); a.xaxis.set_minor_locator(mdates.MonthLocator(bymonth=[4, 7, 10]))
     a.yaxis.set_major_locator(MultipleLocator(3)); a.set_ylim(0, 13.5); virgula(a)
 for a in axs[:, 0]:
@@ -125,9 +137,9 @@ for a, h in zip(axs, HORIZONTES):
     for yy, v, m in zip(ypos, vals, ordem):
         a.text(v + max(vals) * 0.04, yy, f"{v:.3f}".replace(".", ","), va="center", fontsize=7.5,
                color=AZUL if m == "SARIMA" else TINTA)
-    a.set_title(f"({'abc'[HORIZONTES.index(h)]}) h = {h} {'mês' if h == 1 else 'meses'}", loc="left", color=TINTA)
-    a.set_xlim(0, max(vals) * 1.38); a.grid(axis="y", visible=False); a.grid(axis="x", visible=True)
-    virgula(a, "x"); a.set_xlabel("MAE (p.p.)")
+    painel(a, "ABC"[HORIZONTES.index(h)])
+    a.set_xlim(0, max(vals) * 1.38)
+    virgula(a, "x"); a.set_xlabel(f"MAE, h = {h} {'mês' if h == 1 else 'meses'}\n(pontos percentuais)")
 axs[0].set_yticks(range(len(ordem))); axs[0].set_yticklabels(ordem)
 for lbl in axs[0].get_yticklabels():
     if lbl.get_text() == "SARIMA":
@@ -139,16 +151,16 @@ salvar(fig, "fig5_origem_movel.png")
 res_best = r_sar.resid.iloc[r_sar.loglikelihood_burn:]
 fig, axs = plt.subplots(1, 3, figsize=(LARGURA, 5.2 * CM))
 axs[0].axhline(0, color=CINZA_CLARO, lw=0.8)
-axs[0].plot(res_best, color=AZUL, lw=1.0); axs[0].set_title("(a) Resíduos", loc="left", color=TINTA)
+axs[0].plot(res_best, color=AZUL, lw=1.0); axs[0].set_ylabel("Resíduo (pontos percentuais)"); painel(axs[0], "A")
 formata_datas(axs[0], anos=2); virgula(axs[0])
 axs[1].hist(res_best, bins=18, color=AZUL, edgecolor="white", linewidth=0.6)
-axs[1].set_title("(b) Distribuição", loc="left", color=TINTA); axs[1].set_ylabel("Frequência"); virgula(axs[1], "x")
+axs[1].set_ylabel("Frequência"); axs[1].set_xlabel("Resíduo (pontos percentuais)"); painel(axs[1], "B"); virgula(axs[1], "x")
 plot_acf(res_best, lags=24, ax=axs[2], color=AZUL, vlines_kwargs={"colors": AZUL, "lw": 1.0},
          markersize=3, title="")
 for coll in axs[2].collections:
     if "Poly" in coll.__class__.__name__:
         coll.set_facecolor(CINZA_CLARO); coll.set_edgecolor("none"); coll.set_alpha(0.7)
-axs[2].set_title("(c) Função de autocorrelação", loc="left", color=TINTA); axs[2].set_xlabel("Defasagem (meses)")
+axs[2].set_ylabel("Autocorrelação"); painel(axs[2], "C"); axs[2].set_xlabel("Defasagem (meses)")
 virgula(axs[2])
 fig.tight_layout(w_pad=1.2)
 salvar(fig, "fig6_residuos.png")

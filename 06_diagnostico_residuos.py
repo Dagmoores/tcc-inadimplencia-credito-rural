@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Etapa 6 — Diagnóstico dos resíduos dos modelos sazonais: Ljung-Box e Jarque-Bera (Tabela 7, Figura 6).
+"""Etapa 6 — Diagnóstico dos resíduos dos modelos sazonais: Ljung-Box e Jarque-Bera (Tabela 8, Figura 6).
 
 Parte do código do TCC "Modelos de séries temporais para previsão de inadimplência
 no crédito rural brasileiro" (MBA USP/ESALQ) — Daniel Augusto Moore da Silva.

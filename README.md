@@ -18,6 +18,7 @@ O código coleta séries mensais do Banco Central do Brasil (jan/2016 a dez/2025
 | Diagnóstico dos resíduos (Ljung-Box e Jarque-Bera) | [`06_diagnostico_residuos.py`](06_diagnostico_residuos.py) | Tabela 8; Figura 6 |
 | Geração das figuras | [`07_figuras.py`](07_figuras.py) | Figuras 1 a 6 |
 | Robustez: variáveis exógenas defasadas em 3, 6 e 12 meses | [`08_robustez_defasagens.py`](08_robustez_defasagens.py) | Tabela 7 |
+| Sensibilidade à ordem do SARIMA | [`09_ordens_sarima.py`](09_ordens_sarima.py) | Seção Metodologia (escolha da especificação) |
 | Funções e dados compartilhados | [`comum.py`](comum.py) | – |
 
 Os resultados numéricos ficam em [`saidas/resultados.json`](saidas/resultados.json) e as figuras em [`saidas/`](saidas/).
@@ -27,7 +28,7 @@ Os resultados numéricos ficam em [`saidas/resultados.json`](saidas/resultados.j
 ```bash
 git clone https://github.com/Dagmoores/tcc-inadimplencia-credito-rural.git
 cd tcc-inadimplencia-credito-rural
-pip install -r requirements.txt
+pip install -r requirements.txt   # versões fixadas, as mesmas usadas no TCC
 python executar_tudo.py        # ou cada script individualmente, na ordem
 ```
 

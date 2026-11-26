@@ -4,7 +4,7 @@ title: "Modelos de séries temporais para previsão de inadimplência no crédit
 authors:
   - family-names: "Moore da Silva"
     given-names: "Daniel Augusto"
-date-released: 2026-11-24
+date-released: 2026-11-26
 version: "1.0.0"
 license: MIT
 repository-code: "https://github.com/Dagmoores/tcc-inadimplencia-credito-rural"
